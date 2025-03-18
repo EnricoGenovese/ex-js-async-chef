@@ -24,12 +24,49 @@ async function getChefBirthday(id) {
     } catch (error) {
         throw new Error(`Could not fetch recipe da id: ${id}`)
     }
+
     let user;
     try {
         userResponse = await fetch(`https://dummyjson.com/users/${recipe.userId}`);
         user = await userResponse.json();
     } catch (error) {
         throw new Error(`Could not fetch user da id: ${recipe.userId}`)
+    }
+
+    return user.birthDate;
+}
+
+getChefBirthday(1234567890)
+    .then(response => console.log('Il compleanno dello chef è il:', response))
+    .catch(err => console.error(err));
+
+
+
+// Bonus 1
+// Attualmente, se la prima richiesta non trova una ricetta, la seconda richiesta potrebbe comunque essere eseguita causando errori a cascata.
+
+// Modifica getChefBirthday(id) per intercettare eventuali errori prima di fare la seconda richiesta.
+
+async function getChefBirthday(id) {
+    let recipe;
+    try {
+        recipeResponse = await fetch(`https://dummyjson.com/recipes/${id}`);
+        recipe = await recipeResponse.json();
+    } catch (error) {
+        throw new Error(`Could not fetch recipe da id: ${id}`)
+    }
+    if (recipe.message) {
+        throw new Error(recipe.message);
+    }
+    let user;
+    try {
+        userResponse = await fetch(`https://dummyjson.com/users/${recipe.userId}`);
+        user = await userResponse.json();
+    } catch (error) {
+        throw new Error(`Could not fetch user da id: ${recipe.userId}`)
+    }
+    if (user.message) {
+        throw new Error(user.message);
     }
 
     return user.birthDate;
