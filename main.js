@@ -22,7 +22,7 @@ async function getChefBirthday(id) {
         recipeResponse = await fetch(`https://dummyjson.com/recipes/${id}`);
         recipe = await recipeResponse.json();
     } catch (error) {
-        throw new Error(`Could not fetch recipe da id: ${id}`)
+        throw new Error(`Could not fetch recipe at id: ${id}`)
     }
 
     let user;
@@ -30,7 +30,7 @@ async function getChefBirthday(id) {
         userResponse = await fetch(`https://dummyjson.com/users/${recipe.userId}`);
         user = await userResponse.json();
     } catch (error) {
-        throw new Error(`Could not fetch user da id: ${recipe.userId}`)
+        throw new Error(`Could not fetch user at id: ${recipe.userId}`)
     }
 
     return user.birthDate;
@@ -53,7 +53,7 @@ async function getChefBirthday(id) {
         recipeResponse = await fetch(`https://dummyjson.com/recipes/${id}`);
         recipe = await recipeResponse.json();
     } catch (error) {
-        throw new Error(`Could not fetch recipe da id: ${id}`)
+        throw new Error(`Could not fetch recipe at id: ${id}`)
     }
     if (recipe.message) {
         throw new Error(recipe.message);
@@ -63,7 +63,7 @@ async function getChefBirthday(id) {
         userResponse = await fetch(`https://dummyjson.com/users/${recipe.userId}`);
         user = await userResponse.json();
     } catch (error) {
-        throw new Error(`Could not fetch user da id: ${recipe.userId}`)
+        throw new Error(`Could not fetch user at id: ${recipe.userId}`)
     }
     if (user.message) {
         throw new Error(user.message);
@@ -75,3 +75,49 @@ async function getChefBirthday(id) {
 getChefBirthday(1234567890)
     .then(response => console.log('Il compleanno dello chef è il:', response))
     .catch(err => console.error(err));
+
+// Bonus 2
+// Utilizza la libreria dayjs per formattare la data di nascita nel formato giorno/mese/anno.
+
+import dayjs from 'dayjs';
+
+async function fetchJson(url) {
+    const response = await fetch(url);
+    const data = await response.json();
+    return data;
+}
+
+async function getChefBirthday(id) {
+    let recipe;
+    try {
+        recipe = await fetchJson(`https://dummyjson.com/recipes/${id}`);
+    } catch (error) {
+        throw new Error(`Could not fetch recipe at id: ${id}`)
+    }
+    if (recipe.message) {
+        throw new Error(recipe.message);
+    }
+    let user;
+    try {
+        user = await fetchJson(`https://dummyjson.com/users/${recipe.userId}`);
+    } catch (error) {
+        throw new Error(`Could not fetch user at id: ${recipe.userId}`)
+    }
+    if (user.message) {
+        throw new Error(user.message);
+    }
+
+    return dayjs(`${user.birthDate}`).format('DD/MM/YYYY');
+}
+
+
+(async () => {
+    try {
+        const data = await getChefBirthday(3);
+        console.log('Il compleanno dello chef è il:', data)
+    } catch (err) {
+        console.error(err)
+    } finally {
+        console.log('Done')
+    }
+})();

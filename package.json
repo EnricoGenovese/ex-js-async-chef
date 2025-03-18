@@ -1,0 +1,25 @@
+{
+  "name": "ex-js-async-chef",
+  "version": "1.0.0",
+  "description": "",
+  "homepage": "https://github.com/EnricoGenovese/ex-js-async-chef#readme",
+  "bugs": {
+    "url": "https://github.com/EnricoGenovese/ex-js-async-chef/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EnricoGenovese/ex-js-async-chef.git"
+  },
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "dev": "node --watch main.js"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.13"
+  },
+  "devDependencies": {}
+}
